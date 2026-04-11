@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 852cf53dd42a35c4ab26d65dcb296fca, type: 3}
   m_Name: WalletBalanceConfig
   m_EditorClassIdentifier: 
-  _initialCoins: 15000
+  _initialCoins: 1500
+  _minAddOfCoins: 9
+  _maxAddOfCoins: 99

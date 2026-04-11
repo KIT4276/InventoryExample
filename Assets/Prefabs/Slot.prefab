@@ -611,18 +611,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b33f0b18ac3a544b555a352d8e9649, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _frame: {fileID: 7506548886389494590}
   _itemIcon: {fileID: 4385221335451066345}
   _lockView: {fileID: 427687774878277887}
   _unlockView: {fileID: 1388807236022669918}
-  _selectionOverlay: {fileID: 0}
+  _countBack: {fileID: 5240502423237627228}
   _countText: {fileID: 5990455051780272920}
   _lockedSlotNumberText: {fileID: 8444542000224858450}
   _button: {fileID: 4615960007418808935}
-  _defaultFrameColor: {r: 1, g: 1, b: 1, a: 1}
-  _weaponFrameColor: {r: 1, g: 1, b: 1, a: 1}
-  _ammoFrameColor: {r: 1, g: 1, b: 1, a: 1}
-  _armorFrameColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &4615960007418808935
 MonoBehaviour:
   m_ObjectHideFlags: 0

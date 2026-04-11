@@ -81,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initialInventoryConfig: {fileID: 11400000, guid: 08a5202893a29b44c9af8671f9c95b6f, type: 2}
   _itemDatabaseConfig: {fileID: 11400000, guid: d8d5c9cb8240c3f45ac70226b0e3f2ec, type: 2}
+  _ammoRewardConfig: {fileID: 11400000, guid: 666d2a96742b44d9b95e88d68950fc40, type: 2}
 --- !u!114 &3007372014808869343
 MonoBehaviour:
   m_ObjectHideFlags: 0

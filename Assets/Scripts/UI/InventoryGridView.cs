@@ -17,6 +17,7 @@ public class InventoryGridView : MonoBehaviour
     private void Start()
     {
         Build();
+        _inventoryService.Changed += RefreshView;
         RefreshView();
     }
 
@@ -95,5 +96,10 @@ public class InventoryGridView : MonoBehaviour
         _inventoryService.TryStackSlots(_selectedSlotView.SlotData, clickedSlotView.SlotData);
         _selectedSlotView = null;
         RefreshView();
+    }
+
+    void OnDestroy()
+    {
+        _inventoryService.Changed -= RefreshView;
     }
 }

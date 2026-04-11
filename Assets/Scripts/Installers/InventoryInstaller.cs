@@ -6,6 +6,7 @@ public class InventoryInstaller : MonoInstaller
 {
     [SerializeField] private InitialInventoryConfig _initialInventoryConfig;
     [SerializeField] private ItemDatabaseConfig _itemDatabaseConfig;
+    [SerializeField] private AmmoRewardConfig _ammoRewardConfig;
 
     public override void InstallBindings()
     {
@@ -15,6 +16,7 @@ public class InventoryInstaller : MonoInstaller
 
         Container.Bind<InitialInventoryConfig>().FromInstance(_initialInventoryConfig).AsSingle();
         Container.Bind<ItemDatabaseConfig>().FromInstance(_itemDatabaseConfig).AsSingle();
+        Container.Bind<AmmoRewardConfig>().FromInstance(_ammoRewardConfig).AsSingle();
         Container.Bind<ItemDefinition[]>().FromInstance(itemDefinitions).AsSingle();
 
         foreach (ItemDefinition itemDefinition in itemDefinitions)

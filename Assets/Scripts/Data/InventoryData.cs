@@ -45,6 +45,21 @@ public class InventoryData
         return freeSlot.AddItemWithRemainder(item.ID, 1, item.MaxStack) == 0;
     }
 
+    public int AddItems(ItemDefinition item, int count, List<InventorySlotAddResult> addResults)
+    {
+        if (item == null || count <= 0)
+            return count;
+
+        int remainder = count;
+        addResults ??= new List<InventorySlotAddResult>();
+
+        remainder = AddItemsToExistingStacks(item, remainder, addResults);
+        if (remainder <= 0)
+            return 0;
+
+        return AddItemsToEmptySlots(item, remainder, addResults);
+    }
+
     public bool TryStackSlot(InventorySlotData sourceSlot, InventorySlotData targetSlot)
     {
         if (sourceSlot == null || targetSlot == null)
@@ -159,6 +174,59 @@ public class InventoryData
         }
 
         return false;
+    }
+
+    private int AddItemsToExistingStacks(ItemDefinition item, int count, List<InventorySlotAddResult> addResults)
+    {
+        int remainder = count;
+
+        for (int i = 0; i < Slots.Count; i++)
+        {
+            InventorySlotData slot = Slots[i];
+            if (!slot.IsUnlocked || slot.IsEmpty)
+                continue;
+
+            if (slot.ItemId != item.ID || slot.Count >= item.MaxStack)
+                continue;
+
+            int beforeCount = slot.Count;
+            remainder = slot.AddItemWithRemainder(item.ID, remainder, item.MaxStack);
+            int added = slot.Count - beforeCount;
+            if (added > 0)
+            {
+                addResults.Add(new InventorySlotAddResult(i, added));
+            }
+
+            if (remainder <= 0)
+                break;
+        }
+
+        return remainder;
+    }
+
+    private int AddItemsToEmptySlots(ItemDefinition item, int count, List<InventorySlotAddResult> addResults)
+    {
+        int remainder = count;
+
+        for (int i = 0; i < Slots.Count; i++)
+        {
+            InventorySlotData slot = Slots[i];
+            if (!slot.IsUnlocked || !slot.IsEmpty)
+                continue;
+
+            int beforeCount = slot.Count;
+            remainder = slot.AddItemWithRemainder(item.ID, remainder, item.MaxStack);
+            int added = slot.Count - beforeCount;
+            if (added > 0)
+            {
+                addResults.Add(new InventorySlotAddResult(i, added));
+            }
+
+            if (remainder <= 0)
+                break;
+        }
+
+        return remainder;
     }
 
     private bool TryGetItemDefinition(int itemId, out ItemDefinition itemDefinition)

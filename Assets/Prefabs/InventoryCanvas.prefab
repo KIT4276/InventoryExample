@@ -1409,7 +1409,7 @@ GameObject:
   - component: {fileID: 6966988218636999954}
   - component: {fileID: 4647684564785177334}
   m_Layer: 5
-  m_Name: AddAmmotButton
+  m_Name: AddAmmoButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2590,6 +2590,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8943518268384063627}
   - component: {fileID: 6574989720802241870}
+  - component: {fileID: 9204335764687883051}
+  - component: {fileID: 3728789947342594629}
   m_Layer: 5
   m_Name: MiddleRoot
   m_TagString: Untagged
@@ -2633,8 +2635,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefix: "\u041C\u043E\u043D\u0435\u0442\u044B: "
   _coins: {fileID: 3670601955936523065}
+--- !u!114 &9204335764687883051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7410988689504577872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970d87faecaf72e4da421aa2c50c3b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _addCoins: {fileID: 2808309279884919850}
-  _debugAddCoinsAmount: 20
+--- !u!114 &3728789947342594629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7410988689504577872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7df756df0f94cc88084709fdad7d941, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefix: "\u0412\u0435\u0441: "
+  _weightText: {fileID: 8793316881700200917}
 --- !u!1 &8229520927107344301
 GameObject:
   m_ObjectHideFlags: 0
@@ -2854,6 +2881,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6694409521125612539}
   - component: {fileID: 4435248932274457270}
+  - component: {fileID: 4886934375994882289}
+  - component: {fileID: 3898697924183108758}
   m_Layer: 5
   m_Name: TopRoot
   m_TagString: Untagged
@@ -2910,3 +2939,29 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &4886934375994882289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871305926316460730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c77a4b2532a09d429e8ea5c5acacffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _addItem: {fileID: 1286831145705446481}
+--- !u!114 &3898697924183108758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871305926316460730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d3d3798fcb4c63998f8e12c0eca70d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _addAmmo: {fileID: 6966988218636999954}

@@ -56,5 +56,23 @@
         "temp/": true,
         "Temp/": true
     },
+    "files.watcherExclude": {
+        "**/.git/**": true,
+        "**/.vs/**": true,
+        "**/Library/**": true,
+        "**/Logs/**": true,
+        "**/Temp/**": true,
+        "**/obj/**": true,
+        "**/UserSettings/**": true
+    },
+    "search.exclude": {
+        "**/.git": true,
+        "**/.vs": true,
+        "**/Library": true,
+        "**/Logs": true,
+        "**/Temp": true,
+        "**/obj": true,
+        "**/UserSettings": true
+    },
     "dotnet.defaultSolution": "InventoryExample.sln"
 }

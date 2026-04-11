@@ -1,14 +1,11 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 public class WalletView : MonoBehaviour
 {
-    [SerializeField] private string _prefix = "Монеты: ";
+    [SerializeField] private string _prefix = "пїЅпїЅпїЅпїЅпїЅпїЅ: ";
     [SerializeField] private TMP_Text _coins;
-    [SerializeField] private Button _addCoins;
-    [SerializeField] private int _debugAddCoinsAmount = 20;
 
     private WalletService _walletService;
 
@@ -22,12 +19,6 @@ public class WalletView : MonoBehaviour
     {
         RefreshBalance(_walletService.Balance);
         _walletService.BalanceChanged += RefreshBalance;
-        _addCoins.onClick.AddListener(AddCoinsPressed);
-    }
-
-    private void AddCoinsPressed()
-    {
-        _walletService.AddCoins(_debugAddCoinsAmount);
     }
 
     private void RefreshBalance(int balance)
@@ -38,6 +29,5 @@ public class WalletView : MonoBehaviour
     private void OnDestroy()
     {
         _walletService.BalanceChanged -= RefreshBalance;
-        _addCoins.onClick.RemoveListener(AddCoinsPressed);
     }
 }

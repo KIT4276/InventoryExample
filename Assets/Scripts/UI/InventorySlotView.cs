@@ -8,6 +8,7 @@ public class InventorySlotView : MonoBehaviour
     [SerializeField] private Image _itemIcon;
     [SerializeField] private GameObject _lockView;
     [SerializeField] private GameObject _unlockView;
+    [SerializeField] private GameObject _countBack;
     [SerializeField] private TMP_Text _countText;
     [SerializeField] private TMP_Text _lockedSlotNumberText;
     [SerializeField] private Button _button;
@@ -38,7 +39,7 @@ public class InventorySlotView : MonoBehaviour
         if (slotData == null)
         {
             SetVisible(_itemIcon, false);
-            SetVisible(_countText, false);
+            SetActive(_countBack, false);
             SetVisible(_lockedSlotNumberText, false);
             SetActive(_lockView, false);
             SetActive(_unlockView, false);
@@ -61,14 +62,14 @@ public class InventorySlotView : MonoBehaviour
         if (isLocked)
         {
             SetVisible(_itemIcon, false);
-            SetVisible(_countText, false);
+            SetActive(_countBack, false);
             return;
         }
 
         if (isEmpty || itemDefinition == null)
         {
             SetVisible(_itemIcon, false);
-            SetVisible(_countText, false);
+            SetActive(_countBack, false);
             return;
         }
 
@@ -81,8 +82,9 @@ public class InventorySlotView : MonoBehaviour
 
         if (_countText != null)
         {
-            bool showCount = slotData.Count > 1 && itemDefinition.MaxStack > 1;
-            _countText.gameObject.SetActive(showCount);
+            bool showCount = slotData.Count > 1;
+            SetActive(_countBack, showCount);
+
             if (showCount)
                 _countText.text = slotData.Count.ToString();
         }
