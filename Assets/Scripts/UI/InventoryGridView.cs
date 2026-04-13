@@ -8,22 +8,22 @@ public class InventoryGridView : MonoBehaviour
     [SerializeField] private InventorySlotView _slotPrefab;
 
     [Inject] private InitialInventoryConfig _initialInventoryConfig;
-    [Inject] private InventoryService _inventoryService;
+    [Inject] private InventoryQueryService _inventoryQueryService;
+    [Inject] private InventoryMutationService _inventoryMutationService;
     [Inject] private ItemDatabase _itemDatabase;
 
     private readonly List<InventorySlotView> _slotViews = new();
-    private InventorySlotView _selectedSlotView;
 
     private void Start()
     {
         Build();
-        _inventoryService.Changed += RefreshView;
+        _inventoryMutationService.Changed += RefreshView;
         RefreshView();
     }
 
     public void RefreshView()
     {
-        IReadOnlyList<InventorySlotData> slots = _inventoryService.Slots;
+        IReadOnlyList<InventorySlotData> slots = _inventoryQueryService.Slots;
 
         for (int i = 0; i < _slotViews.Count; i++)
         {
@@ -63,7 +63,6 @@ public class InventoryGridView : MonoBehaviour
         }
 
         _slotViews.Clear();
-        _selectedSlotView = null;
     }
 
     private void HandleSlotClick(InventorySlotView clickedSlotView)
@@ -71,35 +70,12 @@ public class InventoryGridView : MonoBehaviour
         if (clickedSlotView == null || clickedSlotView.SlotData == null)
             return;
 
-        if (!clickedSlotView.SlotData.IsUnlocked)
-        {
-            if (_inventoryService.TryUnlockSlot(clickedSlotView.SlotIndex))
-                RefreshView();
-
-            return;
-        }
-
-        if (_selectedSlotView == null)
-        {
-            _selectedSlotView = clickedSlotView;
+        if (!clickedSlotView.SlotData.IsUnlocked && _inventoryMutationService.TryUnlockSlot(clickedSlotView.SlotIndex))
             RefreshView();
-            return;
-        }
-
-        if (_selectedSlotView == clickedSlotView)
-        {
-            _selectedSlotView = null;
-            RefreshView();
-            return;
-        }
-
-        _inventoryService.TryStackSlots(_selectedSlotView.SlotData, clickedSlotView.SlotData);
-        _selectedSlotView = null;
-        RefreshView();
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
-        _inventoryService.Changed -= RefreshView;
+        _inventoryMutationService.Changed -= RefreshView;
     }
 }

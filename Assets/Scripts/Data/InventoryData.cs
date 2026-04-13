@@ -3,8 +3,9 @@ using System.Collections.Generic;
 public class InventoryData
 {
     private readonly ItemDatabase _itemDatabase;
+    private readonly List<InventorySlotData> _slots = new();
 
-    public List<InventorySlotData> Slots { get; private set; } = new();
+    public IReadOnlyList<InventorySlotData> Slots => _slots;
 
     public InventoryData(ItemDatabase itemDatabase)
     {
@@ -13,7 +14,7 @@ public class InventoryData
 
     public void Initialize(InitialInventoryConfig initialInventoryConfig)
     {
-        Slots.Clear();
+        _slots.Clear();
 
         if (initialInventoryConfig == null)
             return;
@@ -30,8 +31,72 @@ public class InventoryData
         {
             InventorySlotData slot = new();
             slot.SetUnlocked(i < initialUnlocked);
-            Slots.Add(slot);
+            _slots.Add(slot);
         }
+    }
+
+    public IReadOnlyList<InventorySlotEntry> GetOccupiedUnlockedSlots()
+    {
+        List<InventorySlotEntry> occupiedSlots = new();
+
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            InventorySlotData slot = _slots[i];
+            if (slot == null || !slot.IsUnlocked || slot.IsEmpty)
+                continue;
+
+            occupiedSlots.Add(new InventorySlotEntry(i, slot));
+        }
+
+        return occupiedSlots;
+    }
+
+    public IReadOnlyList<WeaponDefinition> GetWeapons()
+    {
+        List<WeaponDefinition> weapons = new();
+
+        foreach (InventorySlotEntry occupiedSlot in GetOccupiedUnlockedSlots())
+        {
+            if (!TryGetItemDefinition(occupiedSlot.SlotData.ItemId, out WeaponDefinition weaponDefinition))
+                continue;
+
+            weapons.Add(weaponDefinition);
+        }
+
+        return weapons;
+    }
+
+    public IReadOnlyList<InventorySlotEntry> GetAmmoStacksFor(AmmoDefinition ammoDefinition)
+    {
+        List<InventorySlotEntry> ammoStacks = new();
+        if (ammoDefinition == null)
+            return ammoStacks;
+
+        foreach (InventorySlotEntry occupiedSlot in GetOccupiedUnlockedSlots())
+        {
+            if (occupiedSlot.SlotData.ItemId != ammoDefinition.ID)
+                continue;
+
+            ammoStacks.Add(occupiedSlot);
+        }
+
+        return ammoStacks;
+    }
+
+    public bool TryGetFirstFreeUnlockedSlot(out InventorySlotEntry freeSlot)
+    {
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            InventorySlotData slot = _slots[i];
+            if (slot == null || !slot.IsUnlocked || !slot.IsEmpty)
+                continue;
+
+            freeSlot = new InventorySlotEntry(i, slot);
+            return true;
+        }
+
+        freeSlot = default;
+        return false;
     }
 
     public bool TryAddOneItemToFreeSlot(ItemDefinition item)
@@ -39,10 +104,10 @@ public class InventoryData
         if (item == null)
             return false;
 
-        if (!TryGetFirstFreeSlot(out InventorySlotData freeSlot))
+        if (!TryGetFirstFreeUnlockedSlot(out InventorySlotEntry freeSlot))
             return false;
 
-        return freeSlot.AddItemWithRemainder(item.ID, 1, item.MaxStack) == 0;
+        return freeSlot.SlotData.AddItemWithRemainder(item.ID, 1, item.MaxStack) == 0;
     }
 
     public int AddItems(ItemDefinition item, int count, List<InventorySlotAddResult> addResults)
@@ -99,15 +164,10 @@ public class InventoryData
         if (weaponDefinition == null || weaponDefinition.AmmoDefinition == null)
             return false;
 
-        foreach (InventorySlotData slot in Slots)
+        foreach (InventorySlotEntry ammoSlot in GetAmmoStacksFor(weaponDefinition.AmmoDefinition))
         {
-            if (!slot.IsUnlocked || slot.IsEmpty)
-                continue;
-
-            if (!weaponDefinition.CanUseAmmo(slot.ItemId))
-                continue;
-
-            return slot.TryRemoveItems(1);
+            if (ammoSlot.SlotData.TryRemoveItems(1))
+                return true;
         }
 
         return false;
@@ -115,10 +175,10 @@ public class InventoryData
 
     public bool TryUnlockSlot(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= Slots.Count)
+        if (slotIndex < 0 || slotIndex >= _slots.Count)
             return false;
 
-        InventorySlotData slot = Slots[slotIndex];
+        InventorySlotData slot = _slots[slotIndex];
         if (slot.IsUnlocked)
             return false;
 
@@ -126,11 +186,24 @@ public class InventoryData
         return true;
     }
 
+    public bool TryClearSlot(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= _slots.Count)
+            return false;
+
+        InventorySlotData slot = _slots[slotIndex];
+        if (!slot.IsUnlocked || slot.IsEmpty)
+            return false;
+
+        slot.Clear();
+        return true;
+    }
+
     public List<InventorySlotSaveData> CreateSaveData()
     {
         List<InventorySlotSaveData> saveSlots = new();
 
-        foreach (InventorySlotData slot in Slots)
+        foreach (InventorySlotData slot in _slots)
         {
             saveSlots.Add(new InventorySlotSaveData
             {
@@ -148,41 +221,25 @@ public class InventoryData
         if (saveSlots == null)
             return;
 
-        int count = saveSlots.Count < Slots.Count ? saveSlots.Count : Slots.Count;
+        int count = saveSlots.Count < _slots.Count ? saveSlots.Count : _slots.Count;
 
         for (int i = 0; i < count; i++)
         {
             InventorySlotSaveData saveSlot = saveSlots[i];
-            InventorySlotData slot = Slots[i];
+            InventorySlotData slot = _slots[i];
 
             slot.SetUnlocked(saveSlot.isUnlocked);
             slot.SetItem(saveSlot.itemId, saveSlot.count);
         }
     }
 
-    private bool TryGetFirstFreeSlot(out InventorySlotData freeSlot)
-    {
-        freeSlot = null;
-
-        foreach (InventorySlotData slot in Slots)
-        {
-            if (!slot.IsUnlocked || !slot.IsEmpty)
-                continue;
-
-            freeSlot = slot;
-            return true;
-        }
-
-        return false;
-    }
-
     private int AddItemsToExistingStacks(ItemDefinition item, int count, List<InventorySlotAddResult> addResults)
     {
         int remainder = count;
 
-        for (int i = 0; i < Slots.Count; i++)
+        for (int i = 0; i < _slots.Count; i++)
         {
-            InventorySlotData slot = Slots[i];
+            InventorySlotData slot = _slots[i];
             if (!slot.IsUnlocked || slot.IsEmpty)
                 continue;
 
@@ -193,9 +250,7 @@ public class InventoryData
             remainder = slot.AddItemWithRemainder(item.ID, remainder, item.MaxStack);
             int added = slot.Count - beforeCount;
             if (added > 0)
-            {
                 addResults.Add(new InventorySlotAddResult(i, added));
-            }
 
             if (remainder <= 0)
                 break;
@@ -208,9 +263,9 @@ public class InventoryData
     {
         int remainder = count;
 
-        for (int i = 0; i < Slots.Count; i++)
+        for (int i = 0; i < _slots.Count; i++)
         {
-            InventorySlotData slot = Slots[i];
+            InventorySlotData slot = _slots[i];
             if (!slot.IsUnlocked || !slot.IsEmpty)
                 continue;
 
@@ -218,9 +273,7 @@ public class InventoryData
             remainder = slot.AddItemWithRemainder(item.ID, remainder, item.MaxStack);
             int added = slot.Count - beforeCount;
             if (added > 0)
-            {
                 addResults.Add(new InventorySlotAddResult(i, added));
-            }
 
             if (remainder <= 0)
                 break;
@@ -230,6 +283,16 @@ public class InventoryData
     }
 
     private bool TryGetItemDefinition(int itemId, out ItemDefinition itemDefinition)
+    {
+        itemDefinition = null;
+
+        if (_itemDatabase == null)
+            return false;
+
+        return _itemDatabase.TryGetById(itemId, out itemDefinition);
+    }
+
+    private bool TryGetItemDefinition<TDefinition>(int itemId, out TDefinition itemDefinition) where TDefinition : ItemDefinition
     {
         itemDefinition = null;
 

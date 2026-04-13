@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/InitialInventoryConfig", fileName = "InitialInventoryConfig")]
@@ -16,7 +17,7 @@ public class InitialInventoryConfig : ScriptableObject
 
     public int TotalSlots => _totalSlots;
     public int InitialUnlocked => _initialUnlocked;
-    public int[] SlotUnlockCosts => _slotUnlockCosts;
+    public IReadOnlyList<int> SlotUnlockCosts => _slotUnlockCosts;
 
     public bool TryGetUnlockCost(int slotIndex, out int cost)
     {

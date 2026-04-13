@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class AddAmmoButton : MonoBehaviour
+public class ShotButton : MonoBehaviour
 {
-    [SerializeField] private Button _addAmmo;
+    [SerializeField] private Button _shot;
 
     private InventoryActionService _inventoryActionService;
 
@@ -16,16 +16,16 @@ public class AddAmmoButton : MonoBehaviour
 
     private void Start()
     {
-        _addAmmo.onClick.AddListener(AddAmmoPressed);
+        _shot.onClick.AddListener(HandleShot);
     }
 
-    private void AddAmmoPressed()
+    private void HandleShot()
     {
-        _inventoryActionService.TryAddRandomAmmo();
+        _inventoryActionService.TryShootRandomWeapon();
     }
 
     private void OnDestroy()
     {
-        _addAmmo.onClick.RemoveListener(AddAmmoPressed);
+        _shot.onClick.RemoveListener(HandleShot);
     }
 }

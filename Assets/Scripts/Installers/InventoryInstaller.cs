@@ -29,7 +29,9 @@ public class InventoryInstaller : MonoInstaller
 
         Container.Bind<ItemDatabase>().AsSingle();
         Container.Bind<InventoryData>().AsSingle();
-        Container.Bind<InventoryService>().AsSingle();
+        Container.Bind<InventoryQueryService>().AsSingle();
+        Container.Bind<InventoryMutationService>().AsSingle();
+        Container.Bind<InventoryActionService>().AsSingle();
         Container.BindInterfacesAndSelfTo<InventoryInitializer>().AsSingle().NonLazy();
     }
 }

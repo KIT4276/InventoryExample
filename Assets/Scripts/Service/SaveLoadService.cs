@@ -20,12 +20,19 @@ public class SaveLoadService
             return;
         }
 
-        string directoryPath = Path.GetDirectoryName(_savePath);
-        if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
-            Directory.CreateDirectory(directoryPath);
+        try
+        {
+            string directoryPath = Path.GetDirectoryName(_savePath);
+            if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
 
-        string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(_savePath, json);
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(_savePath, json);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogError($"[SaveLoadService] Save failed: {exception.Message}");
+        }
     }
 
     public GameSaveData Load()
@@ -33,10 +40,29 @@ public class SaveLoadService
         if (!HasSave())
             return new GameSaveData();
 
-        string json = File.ReadAllText(_savePath);
-        GameSaveData saveData = JsonUtility.FromJson<GameSaveData>(json);
+        try
+        {
+            string json = File.ReadAllText(_savePath);
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                Debug.LogError("[SaveLoadService] Load failed: save file is empty.");
+                return new GameSaveData();
+            }
 
-        return saveData ?? new GameSaveData();
+            GameSaveData saveData = JsonUtility.FromJson<GameSaveData>(json);
+            if (saveData == null)
+            {
+                Debug.LogError("[SaveLoadService] Load failed: save data is invalid.");
+                return new GameSaveData();
+            }
+
+            return saveData;
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogError($"[SaveLoadService] Load failed: {exception.Message}");
+            return new GameSaveData();
+        }
     }
 
     public void Clear()

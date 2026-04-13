@@ -2883,6 +2883,8 @@ GameObject:
   - component: {fileID: 4435248932274457270}
   - component: {fileID: 4886934375994882289}
   - component: {fileID: 3898697924183108758}
+  - component: {fileID: 4555901968849523547}
+  - component: {fileID: 8083402630582104419}
   m_Layer: 5
   m_Name: TopRoot
   m_TagString: Untagged
@@ -2965,3 +2967,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _addAmmo: {fileID: 6966988218636999954}
+--- !u!114 &4555901968849523547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871305926316460730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8284fef513f4f76a0f1272e535a11c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shot: {fileID: 4393495402515648544}
+--- !u!114 &8083402630582104419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871305926316460730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc51cf050604c3ea73dd3199dff719e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _removeItem: {fileID: 1946345403190430899}

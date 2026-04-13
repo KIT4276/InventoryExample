@@ -6,12 +6,12 @@ public class AddItemButton : MonoBehaviour
 {
     [SerializeField] private Button _addItem;
 
-    private InventoryService _inventoryService;
+    private InventoryActionService _inventoryActionService;
 
     [Inject]
-    private void Construct(InventoryService inventoryService)
+    private void Construct(InventoryActionService inventoryActionService)
     {
-        _inventoryService = inventoryService;
+        _inventoryActionService = inventoryActionService;
     }
 
     private void Start()
@@ -21,12 +21,11 @@ public class AddItemButton : MonoBehaviour
 
     private void AddItemPressed()
     {
-        _inventoryService.TryAddRandomItem();
+        _inventoryActionService.TryAddRandomItem();
     }
 
     private void OnDestroy()
     {
         _addItem.onClick.RemoveListener(AddItemPressed);
-
     }
 }

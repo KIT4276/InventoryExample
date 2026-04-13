@@ -3,22 +3,22 @@ using Zenject;
 public class InventoryInitializer : IInitializable
 {
     private readonly InventoryData _inventoryData;
-    private readonly InventoryService _inventoryService;
+    private readonly InventoryMutationService _inventoryMutationService;
     private readonly InitialInventoryConfig _initialInventoryConfig;
 
     public InventoryInitializer(
         InventoryData inventoryData,
-        InventoryService inventoryService,
+        InventoryMutationService inventoryMutationService,
         InitialInventoryConfig initialInventoryConfig)
     {
         _inventoryData = inventoryData;
-        _inventoryService = inventoryService;
+        _inventoryMutationService = inventoryMutationService;
         _initialInventoryConfig = initialInventoryConfig;
     }
 
     public void Initialize()
     {
         _inventoryData.Initialize(_initialInventoryConfig);
-        _inventoryService.LoadSlots();
+        _inventoryMutationService.LoadSlots();
     }
 }

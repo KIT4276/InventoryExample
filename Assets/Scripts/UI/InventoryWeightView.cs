@@ -7,31 +7,33 @@ public class InventoryWeightView : MonoBehaviour
     [SerializeField] private string _prefix = "\u0412\u0435\u0441: ";
     [SerializeField] private TMP_Text _weightText;
 
-    private InventoryService _inventoryService;
+    private InventoryQueryService _inventoryQueryService;
+    private InventoryMutationService _inventoryMutationService;
 
     [Inject]
-    private void Construct(InventoryService inventoryService)
+    private void Construct(InventoryQueryService inventoryQueryService, InventoryMutationService inventoryMutationService)
     {
-        _inventoryService = inventoryService;
+        _inventoryQueryService = inventoryQueryService;
+        _inventoryMutationService = inventoryMutationService;
     }
 
     private void Start()
     {
         RefreshWeight();
-        _inventoryService.Changed += RefreshWeight;
+        _inventoryMutationService.Changed += RefreshWeight;
     }
 
     private void RefreshWeight()
     {
-        if (_weightText == null || _inventoryService == null)
+        if (_weightText == null || _inventoryQueryService == null)
             return;
 
-        _weightText.text = _prefix + _inventoryService.TotalWeight.ToString("0.###");
+        _weightText.text = _prefix + _inventoryQueryService.TotalWeight.ToString("0.###");
     }
 
     private void OnDestroy()
     {
-        if (_inventoryService != null)
-            _inventoryService.Changed -= RefreshWeight;
+        if (_inventoryMutationService != null)
+            _inventoryMutationService.Changed -= RefreshWeight;
     }
 }

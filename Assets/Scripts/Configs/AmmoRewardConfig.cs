@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/AmmoRewardConfig", fileName = "AmmoRewardConfig")]
@@ -9,5 +11,5 @@ public class AmmoRewardConfig : ScriptableObject
 
     public int MinAddAmount => Mathf.Max(1, _minAddAmount);
     public int MaxAddAmount => Mathf.Max(MinAddAmount, _maxAddAmount);
-    public AmmoDefinition[] AvailableAmmoDefinitions => _availableAmmoDefinitions;
+    public IReadOnlyList<AmmoDefinition> AvailableAmmoDefinitions => _availableAmmoDefinitions ?? Array.Empty<AmmoDefinition>();
 }

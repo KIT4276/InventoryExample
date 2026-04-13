@@ -4,7 +4,7 @@ using Zenject;
 
 public class WalletView : MonoBehaviour
 {
-    [SerializeField] private string _prefix = "������: ";
+    [SerializeField] private string _prefix = "\u041c\u043e\u043d\u0435\u0442\u044b: ";
     [SerializeField] private TMP_Text _coins;
 
     private WalletService _walletService;

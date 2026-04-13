@@ -32,7 +32,7 @@ public class WalletService
         SaveBalance();
         BalanceChanged?.Invoke(_walletData.Coins);
 
-        Debug.Log($"Добавлено {amount} монет");
+        Debug.Log($"\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e {amount} \u043c\u043e\u043d\u0435\u0442");
     }
 
     public bool CanSpend(int amount)
@@ -52,8 +52,8 @@ public class WalletService
 
     public void AddRandomCoins()
     {
-        var r = UnityEngine.Random.Range(_walletBalanceConfig.MinAddOfCoins,_walletBalanceConfig.MaxAddOfCoins+1);
-        AddCoins(r);
+        int reward = UnityEngine.Random.Range(_walletBalanceConfig.MinAddOfCoins, _walletBalanceConfig.MaxAddOfCoins + 1);
+        AddCoins(reward);
     }
 
     private void LoadBalance()
@@ -76,5 +76,4 @@ public class WalletService
         saveData.coins = _walletData.Coins;
         _saveLoadService.Save(saveData);
     }
-
 }
